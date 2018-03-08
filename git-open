@@ -1,4 +1,5 @@
 #!/bin/bash
+# See also https://github.com/paulirish/git-open/blob/master/git-open, found after this script but much more complete
 
 remote=`git config --get remote.origin.url`
 url=$(sed 's/:/\//; s/^git@/https:\/\//; s/\.git$//' <<< $remote)
