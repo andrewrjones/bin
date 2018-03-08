@@ -1,0 +1,12 @@
+#!/bin/bash
+
+branch=$(git symbolic-ref -q --short HEAD)
+remote=`git config --get remote.origin.url`
+url=$(sed 's/:/\//; s/^git@/https:\/\//; s/\.git$//' <<< $remote)
+if [[ $branch == "master" ]]; then
+  echo "Can't open a PR from master!"
+  exit 1;
+fi
+open "$url/compare/$branch?expand=1"
+
+exit 0
