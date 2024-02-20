@@ -4,13 +4,21 @@ url=$1
 title=$2
 path=$3
 
+escape_string()
+{
+   printf '%s' "$1" | tr -d '[!"#$%&'\''()+,./:;<=>?@[\]^_`{|}~]'
+}
+
+filepath=$(escape_string "$title")
+
 date=`date +"%Y-%m-%dT%H:%M"`
 
 mkdir -p $path
-cat << EOF > "$path/$title.md"
+cat << EOF > "$path/$filepath.md"
+# $title
 $url
 $date
 EOF
 
-cmd=(/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --headless --disable-gpu --print-to-pdf="$path/$title.pdf" $url )
+cmd=(/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --headless --disable-gpu --print-to-pdf="$path/$filepath.pdf" $url )
 "${cmd[@]}"
