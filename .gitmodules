@@ -1,0 +1,3 @@
+[submodule "EvanHahn-dotfiles"]
+	path = EvanHahn-dotfiles
+	url = https://codeberg.org/EvanHahn/dotfiles.git
