@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -e
+set -u
+
+exec uvx --no-cache --from yt-dlp[default] yt-dlp $@
