@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Approves PR(s) and asks dependabot to squash and merge
+
+for pr in "$@"
+do
+    gh pr review "$pr" --comment -b "@dependabot rebase"
+done
