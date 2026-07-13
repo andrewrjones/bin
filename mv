@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e
+set -u
+
+if [ "$#" -eq 1 ]; then
+    /bin/mv "$1" .
+else
+    /bin/mv "$@"
+fi
