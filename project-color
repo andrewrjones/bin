@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Print a deterministic #rrggbb terminal colour for a git repo.
+#
+# Single source of truth for per-project colours: the shell prompt, the cmux
+# claude wrapper, and (later) VS Code all call this so the algorithm lives here.
+#
+# Usage:
+#   project-color          resolve the repo containing $PWD
+#   project-color <path>   resolve the repo containing <path>
+#
+# On success prints "#rrggbb\n" and exits 0. Outside a git repo it prints
+# nothing and exits non-zero; callers decide how to reset. Only the colour is
+# written to stdout; diagnostics go to stderr.
+set -euo pipefail
+
+target=${1:-.}
+[ -d "$target" ] || target=$(dirname "$target")   # accept a file path too
+
+# Per-worktree: each worktree's toplevel hashes to its own distinct colour.
+root=$(git -C "$target" rev-parse --show-toplevel 2>/dev/null) || exit 1
+
+# MD5 of the repo path. md5 is macOS; fall back to md5sum on Linux. Both emit
+# the same digest for the same input, so colours stay stable across machines.
+hash=$(printf '%s' "$root" | { md5 -q 2>/dev/null || md5sum | cut -d' ' -f1; })
+
+r=$(( 16#${hash:0:2} % 71 + 30 ))
+g=$(( 16#${hash:2:2} % 71 + 30 ))
+b=$(( 16#${hash:4:2} % 71 + 30 ))
+printf '#%02x%02x%02x\n' "$r" "$g" "$b"
