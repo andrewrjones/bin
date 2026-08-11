@@ -1,0 +1,10 @@
+#!/bin/sh
+# Paint the terminal background for the current repo, then hand off to the real
+# Claude Code binary. Used by cmux's automation.claudeBinaryPath so that agent
+# panes cmux restores with no shell (hence no precmd) still get tinted.
+#
+# cmux resolves this path first, injects its --session-id/--settings hooks, and
+# execs into here; we exec the real binary by absolute path (a symlink to the
+# versioned Mach-O binary, not a shim, so cmux's reexec-loop check is happy).
+c=$(project-color) && printf '\033]11;%s\033\\' "$c"
+exec "$HOME/.local/bin/claude" "$@"
