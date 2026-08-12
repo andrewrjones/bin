@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -e
+set -u
+
+# Find a real poe that isn't this wrapper
+self="$(command -v "$0")"
+for p in $(command -v -a poe 2>/dev/null); do
+    if [ "$p" != "$self" ]; then
+        exec "$p" "$@"
+    fi
+done
+
+# Not installed: fall back to uv, guarding against re-entry into this wrapper
+if [ "${_POE_WRAPPER:-}" = "1" ]; then
+    echo "poe: not found and 'uv run poe' could not resolve it" >&2
+    exit 127
+fi
+exec env _POE_WRAPPER=1 uv run poe "$@"
