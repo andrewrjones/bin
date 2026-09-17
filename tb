@@ -6,8 +6,12 @@ set -o pipefail
 export TB_CLI_TELEMETRY_OPTOUT=1
 
 if [[ -n ${TB_CLI-} ]]; then
+  # Classic
+  [[ $# -eq 0 ]] && set -- auth info
   exec uvx --python 3.13 --from tinybird-cli@latest tb "$@"
 else
+  # Forward
+  [[ $# -eq 0 ]] && set -- workspace ls
   exec uvx --python 3.13 --from tinybird@latest tb "$@"
 fi
 
